@@ -1,0 +1,85 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Effects/Smoke.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player/Bullet.gd" type="Script" id=2]
+[ext_resource path="res://PNG/Bullet-Sheet.png" type="Texture" id=3]
+[ext_resource path="res://PNG/Smoke.png" type="Texture" id=4]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 5.91304
+height = 14.7957
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.536585, 0.804878, 1 )
+colors = PoolColorArray( 1, 0.9375, 0, 1, 1, 0.513726, 0, 0.701961, 1, 1, 1, 0.173086, 0.603922, 0.0941176, 0.0431373, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0.00877193, 0.078409 ), 0.0, 0.0, 0, 0, Vector2( 0.223684, 0.372727 ), 0.24385, 0.24385, 0, 0, Vector2( 1, 0.154545 ), 0.327272, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+emission_shape = 1
+emission_sphere_radius = 10.0
+flag_disable_z = true
+direction = Vector3( 2, 2, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 15.0
+initial_velocity_random = 1.0
+angular_velocity = 20.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 60.0
+radial_accel_random = 1.0
+damping = 60.0
+angle = 720.0
+angle_random = 0.99
+scale = 1.5
+scale_random = 1.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+
+[sub_resource type="CircleShape2D" id=7]
+
+[node name="Bullet" type="Area2D"]
+z_index = 5
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+rotation = 1.5708
+scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+hframes = 2
+
+[node name="Bomb" type="CollisionShape2D" parent="."]
+position = Vector2( 0.0912101, -0.0698283 )
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.9
+
+[node name="Big" parent="." instance=ExtResource( 1 )]
+scale = Vector2( 3, 3 )
+
+[node name="Small" parent="." instance=ExtResource( 1 )]
+scale = Vector2( 3, 3 )
+amount = 3
+process_material = SubResource( 6 )
+
+[node name="MachineGun" type="CollisionShape2D" parent="."]
+shape = SubResource( 7 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( -2.45001, -2.38379 )
+scale = Vector2( 2.54781, 1.89392 )
+texture = ExtResource( 4 )
+energy = 0.3
+[connection signal="area_entered" from="." to="." method="_on_Area_area_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

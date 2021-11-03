@@ -1,0 +1,205 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Effects/Screen_Tween.gd" type="Script" id=1]
+[ext_resource path="res://Effects/3D.shader" type="Shader" id=2]
+[ext_resource path="res://Holder.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Boss_Bar.tscn" type="PackedScene" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+shader_param/offset = 18.0
+
+[sub_resource type="Animation" id=2]
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_param/offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 18.0, 10.0, 2.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rect_size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1024, 600 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:anchor_top")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.5, 0.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:anchor_left")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.5, 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:anchor_right")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.5, 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:anchor_bottom")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.5, 1.0 ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:rect_position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 512, 300 ), Vector2( 0, 0 ) ]
+}
+tracks/7/type = "method"
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_shake"
+} ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Pan_Out"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 2, 2 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "Zoom_in"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:zoom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 2, 2 ), Vector2( 1, 1 ) ]
+}
+
+[node name="Camera2D" type="Camera2D"]
+current = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Health" parent="CanvasLayer" instance=ExtResource( 3 )]
+modulate = Color( 0.317647, 0.94902, 0.184314, 1 )
+position = Vector2( 100, 530 )
+scale = Vector2( 3, 3 )
+flip_h = true
+
+[node name="Ammo" parent="CanvasLayer/Health" index="0"]
+position = Vector2( 18.0064, 0.214851 )
+scale = Vector2( 0.8, 0.8 )
+z_index = 2
+frame = 3
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource( 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/ColorRect"]
+anims/default = SubResource( 2 )
+
+[node name="Clips" type="Node2D" parent="CanvasLayer"]
+position = Vector2( 948.951, 560 )
+scale = Vector2( 3, 3 )
+
+[node name="Holder" parent="CanvasLayer/Clips" instance=ExtResource( 3 )]
+position = Vector2( 0, -70 )
+scale = Vector2( 0.7, 0.7 )
+
+[node name="Holder2" parent="CanvasLayer/Clips" instance=ExtResource( 3 )]
+position = Vector2( 0, -40 )
+scale = Vector2( 0.7, 0.7 )
+
+[node name="Holder3" parent="CanvasLayer/Clips" instance=ExtResource( 3 )]
+position = Vector2( -8, -10 )
+
+[node name="Health_Bars" type="Node2D" parent="CanvasLayer"]
+
+[node name="Bar" parent="CanvasLayer/Health_Bars" instance=ExtResource( 4 )]
+position = Vector2( 514.153, 51.7848 )
+
+[node name="Bar2" parent="CanvasLayer/Health_Bars" instance=ExtResource( 4 )]
+position = Vector2( 514.153, 51.7848 )
+
+[node name="Bar3" parent="CanvasLayer/Health_Bars" instance=ExtResource( 4 )]
+position = Vector2( 514.153, 51.7848 )
+
+[node name="Pan" type="AnimationPlayer" parent="."]
+anims/Pan_Out = SubResource( 3 )
+anims/Zoom_in = SubResource( 4 )
+
+[editable path="CanvasLayer/Health"]

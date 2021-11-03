@@ -1,0 +1,247 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Misc/Trail.gd" type="Script" id=1]
+[ext_resource path="res://Enemy/Enemy.gd" type="Script" id=2]
+[ext_resource path="res://PNG/Enemy-Sheet.png" type="Texture" id=3]
+[ext_resource path="res://PNG/Smoke.png" type="Texture" id=4]
+[ext_resource path="res://Effects/Splatter.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Effects/Smoke.tscn" type="PackedScene" id=6]
+[ext_resource path="res://PNG/Ring.png" type="Texture" id=7]
+
+[sub_resource type="CircleShape2D" id=1]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform vec4 flash_color: hint_color = vec4(1.0);
+uniform float flash_modifier: hint_range(0.0,1.0) = 1;
+
+void fragment(){
+	vec4 color = texture(TEXTURE,UV);
+	color.rgb = mix(color.rgb, flash_color.rgb, flash_modifier);
+	COLOR = color;
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/flash_color = Color( 1, 1, 1, 1 )
+shader_param/flash_modifier = 0.0
+
+[sub_resource type="Curve" id=4]
+max_value = 2.0
+_data = [ Vector2( 0.021978, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1.83636 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0, 0.483444, 1 )
+colors = PoolColorArray( 1, 0.3125, 0.3125, 1, 0.867188, 0.658224, 0.298096, 1, 1, 1, 1, 1 )
+
+[sub_resource type="CircleShape2D" id=6]
+radius = 11.5635
+
+[sub_resource type="Animation" id=7]
+resource_name = "Blink"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/flash_modifier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.9
+tracks/0/type = "value"
+tracks/0/path = NodePath("Ring:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.1, 0.1 ), Vector2( 5, 5 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Ring:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0.796078, 0, 1 ), Color( 1, 0.654902, 0, 0.501961 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Ring:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.1, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Sprite:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 3, 3 ), Vector2( 1, 1 ), Vector2( 2, 2 ), Vector2( 0, 0.5 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Sprite:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 122.146
+
+[node name="Enemy" type="KinematicBody2D"]
+scale = Vector2( 2, 2 )
+z_index = 2
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 3 )
+rotation = 1.5708
+texture = ExtResource( 3 )
+hframes = 3
+frame = 2
+
+[node name="Type1" type="Node2D" parent="Sprite"]
+position = Vector2( 10.5112, 8.19874 )
+
+[node name="Position2D" type="Position2D" parent="Sprite/Type1"]
+position = Vector2( -10.5231, 2.94646 )
+
+[node name="Line2D" type="Line2D" parent="Sprite/Type1/Position2D"]
+position = Vector2( 0.105114, -0.525556 )
+points = PoolVector2Array( -0.00268126, 0.00268078 )
+width = 4.0
+width_curve = SubResource( 4 )
+default_color = Color( 0.4, 0.501961, 1, 1 )
+gradient = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="Type2" type="Node2D" parent="Sprite"]
+
+[node name="Position2D" type="Position2D" parent="Sprite/Type2"]
+position = Vector2( -3.0285, 8.12858 )
+
+[node name="Line2D" type="Line2D" parent="Sprite/Type2/Position2D"]
+position = Vector2( 0.105114, -0.525556 )
+points = PoolVector2Array( -0.00268126, 0.00268078 )
+width = 2.0
+width_curve = SubResource( 4 )
+default_color = Color( 0.4, 0.501961, 1, 1 )
+gradient = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="Position2D2" type="Position2D" parent="Sprite/Type2"]
+position = Vector2( 3.14504, 8.12858 )
+
+[node name="Line2D" type="Line2D" parent="Sprite/Type2/Position2D2"]
+position = Vector2( 0.105114, -0.525556 )
+points = PoolVector2Array( -0.00268126, 0.00268078 )
+width = 2.0
+width_curve = SubResource( 4 )
+default_color = Color( 0.4, 0.501961, 1, 1 )
+gradient = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="Type3" type="Node2D" parent="Sprite"]
+
+[node name="Position2D2" type="Position2D" parent="Sprite/Type3"]
+position = Vector2( -10.5661, 7.50325 )
+
+[node name="Line2D" type="Line2D" parent="Sprite/Type3/Position2D2"]
+position = Vector2( 0.105114, -0.525556 )
+points = PoolVector2Array( -0.00268126, 0.00268078 )
+width = 3.0
+width_curve = SubResource( 4 )
+default_color = Color( 0.4, 0.501961, 1, 1 )
+gradient = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="Position2D3" type="Position2D" parent="Sprite/Type3"]
+position = Vector2( 10.5423, 7.50325 )
+
+[node name="Line2D" type="Line2D" parent="Sprite/Type3/Position2D3"]
+position = Vector2( 0.105114, -0.525556 )
+points = PoolVector2Array( -0.00268126, 0.00268078 )
+width = 3.0
+width_curve = SubResource( 4 )
+default_color = Color( 0.4, 0.501961, 1, 1 )
+gradient = SubResource( 5 )
+script = ExtResource( 1 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( -2.03446, 0.350769 )
+scale = Vector2( 1.33323, 1.29815 )
+texture = ExtResource( 4 )
+texture_scale = 2.0
+energy = 0.55
+
+[node name="Enemy_Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy_Area"]
+shape = SubResource( 6 )
+
+[node name="Rate" type="Timer" parent="."]
+wait_time = 1.2
+
+[node name="Barrel" type="Position2D" parent="."]
+position = Vector2( 12.9047, 0.0883884 )
+
+[node name="Splatter" parent="." instance=ExtResource( 5 )]
+rotation = 1.5708
+scale = Vector2( 4.5, 4.5 )
+
+[node name="Test" parent="." instance=ExtResource( 6 )]
+scale = Vector2( 0.8, 0.8 )
+
+[node name="Ring" type="Sprite" parent="."]
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 7 )
+
+[node name="Ring_Fade" type="AnimationPlayer" parent="."]
+anims/Blink = SubResource( 7 )
+anims/Fade = SubResource( 8 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 9 )
+[connection signal="area_entered" from="Enemy_Area" to="." method="_on_Enemy_Area_area_entered"]
+[connection signal="timeout" from="Rate" to="." method="_on_Rate_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

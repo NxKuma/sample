@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://PNG/Shooter.png" type="Texture" id=1]
+[ext_resource path="res://Misc/Boost.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Player/Laser.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Player/Movement.gd" type="Script" id=5]
+[ext_resource path="res://PNG/CrossHair.png" type="Texture" id=7]
+[ext_resource path="res://Effects/Smoke.tscn" type="PackedScene" id=8]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 11.9845
+
+[sub_resource type="CircleShape2D" id=2]
+
+[node name="Player" type="KinematicBody2D"]
+light_mask = 2
+script = ExtResource( 5 )
+speed = 200
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+light_mask = 2
+shape = SubResource( 1 )
+
+[node name="Ship" type="Sprite" parent="."]
+rotation = 1.5708
+scale = Vector2( 2, 2 )
+z_index = 3
+texture = ExtResource( 1 )
+
+[node name="Attachments" type="Node2D" parent="Ship"]
+
+[node name="Bullet_Range" type="Node2D" parent="Ship/Attachments"]
+position = Vector2( -0.000361999, -100 )
+rotation = -1.5708
+scale = Vector2( 0.5, 0.5 )
+
+[node name="Sprite" type="Sprite" parent="Ship/Attachments/Bullet_Range"]
+texture = ExtResource( 7 )
+
+[node name="Sprite" parent="Ship/Attachments" instance=ExtResource( 2 )]
+position = Vector2( -4.99539, 4.99052 )
+
+[node name="Sprite2" parent="Ship/Attachments" instance=ExtResource( 2 )]
+position = Vector2( 6.00261, 5.0145 )
+flip_h = true
+
+[node name="3D Tween" type="Tween" parent="."]
+
+[node name="Rate" type="Timer" parent="."]
+
+[node name="Barrel" type="Position2D" parent="."]
+light_mask = 2
+position = Vector2( 13.8898, 0 )
+
+[node name="Laser" parent="Barrel" instance=ExtResource( 4 )]
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( -0.58992, 1.12085 )
+rotation = 1.5708
+scale = Vector2( 1.99549, 2.59279 )
+texture = ExtResource( 1 )
+texture_scale = 1.76
+energy = 0.65
+
+[node name="Swap" type="Timer" parent="."]
+
+[node name="Test" parent="." instance=ExtResource( 8 )]
+
+[node name="Player_Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player_Area"]
+scale = Vector2( 1.3, 1.3 )
+shape = SubResource( 2 )
+[connection signal="timeout" from="Rate" to="." method="_on_Rate_timeout"]
+[connection signal="timeout" from="Swap" to="." method="_on_Swap_timeout"]
+[connection signal="area_entered" from="Player_Area" to="." method="_on_Player_Area_area_entered"]
